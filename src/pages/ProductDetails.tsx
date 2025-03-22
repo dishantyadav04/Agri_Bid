@@ -14,7 +14,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 const ProductDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { products, selectedProduct, setSelectedProduct, currentUser, isHighestBidder, isAuthenticated, currency } = useProducts();
+  const { products, selectedProduct, setSelectedProduct, currentUser, isHighestBidder, isAuthenticated, currency, getHighestBidForProduct } = useProducts();
   
   const [activeTab, setActiveTab] = useState('details');
   
@@ -37,6 +37,11 @@ const ProductDetails: React.FC = () => {
       </div>
     );
   }
+  
+  // Get the actual highest bid amount
+  const highestBidAmount = selectedProduct.bids && selectedProduct.bids.length > 0 
+    ? getHighestBidForProduct(selectedProduct.id) 
+    : selectedProduct.currentPrice;
   
   // Check if auction has ended
   const isAuctionEnded = selectedProduct.auctionEndTime && new Date() > new Date(selectedProduct.auctionEndTime);
@@ -129,7 +134,7 @@ const ProductDetails: React.FC = () => {
             </div>
             
             <p className="text-lg font-medium mb-1">
-              Current bid: {currency}{selectedProduct.currentPrice.toFixed(2)}
+              Current bid: {currency}{highestBidAmount.toFixed(2)}
             </p>
             <p className="text-sm text-muted-foreground mb-6">
               Started at {currency}{selectedProduct.startingPrice.toFixed(2)}
