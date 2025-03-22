@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProducts } from '@/context/ProductContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Wheat, Leaf, Apple, Coffee, Beef, ChiliHot } from 'lucide-react';
+import { ArrowRight, Wheat, Leaf, Apple, Coffee, Beef, Flame } from 'lucide-react';
 
 const FeaturedCategories: React.FC = () => {
   const { products } = useProducts();
@@ -19,7 +19,7 @@ const FeaturedCategories: React.FC = () => {
     'Grains': Wheat,
     'Fruits': Apple,
     'Vegetables': Leaf,
-    'Spices': ChiliHot,
+    'Spices': Flame,
     'Tea': Coffee,
     'Dairy': Beef,
     'Oils': Coffee,
