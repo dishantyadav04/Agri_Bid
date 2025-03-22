@@ -7,73 +7,100 @@ const TermsOfService: React.FC = () => {
     <div className="container mx-auto py-12 px-4">
       <h1 className="text-4xl font-bold text-green-700 mb-8 text-center">Terms of Service</h1>
       
-      <Card className="max-w-4xl mx-auto">
-        <CardContent className="pt-6 prose prose-green max-w-none">
-          <p className="text-sm text-muted-foreground mb-6">
-            Last Updated: June 1, 2023
-          </p>
-          
-          <p>
-            Please read these Terms of Service ("Terms") carefully before using the AgriBid website and service operated by AgriBid.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">1. Acceptance of Terms</h2>
-          <p>
-            By accessing or using our Service, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">2. Description of Service</h2>
-          <p>
-            AgriBid provides an online marketplace that connects farmers with buyers through an auction-based system for agricultural products.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">3. User Accounts</h2>
-          <p>
-            When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.
-          </p>
-          <p>
-            You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">4. Auctions and Bidding</h2>
-          <p>
-            By placing a bid, you are making a binding offer to purchase the item at the bid price. If you are the winning bidder at the end of an auction, you are obligated to complete the purchase.
-          </p>
-          <p>
-            Sellers must accurately describe their products and fulfill orders for successful auctions in a timely manner.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">5. Fees and Payment</h2>
-          <p>
-            AgriBid may charge fees for certain services. All fees are non-refundable. You agree to provide current, complete, and accurate purchase and account information for all purchases made on our platform.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">6. Intellectual Property</h2>
-          <p>
-            The Service and its original content, features, and functionality are and will remain the exclusive property of AgriBid and its licensors.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">7. Limitation of Liability</h2>
-          <p>
-            In no event shall AgriBid, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">8. Governing Law</h2>
-          <p>
-            These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">9. Changes to Terms</h2>
-          <p>
-            We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.
-          </p>
-          
-          <h2 className="text-xl font-semibold mt-6 mb-4">10. Contact Us</h2>
-          <p>
-            If you have any questions about these Terms, please contact us at info@agribid.com.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="max-w-3xl mx-auto">
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-muted-foreground mb-6">
+              Last updated: June 1, 2023
+            </p>
+            
+            <div className="space-y-6">
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">1. Introduction</h2>
+                <p className="text-muted-foreground mb-2">
+                  Welcome to AgriBid ("we", "our", or "us"). By accessing or using our website and services, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our services.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">2. Eligibility</h2>
+                <p className="text-muted-foreground mb-2">
+                  To use our services, you must be at least 18 years old and capable of forming a binding contract. If you are accessing our services on behalf of a company or other legal entity, you represent that you have the authority to bind such entity to these Terms.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">3. Account Registration</h2>
+                <p className="text-muted-foreground mb-2">
+                  To access certain features of our platform, you may need to register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.
+                </p>
+                <p className="text-muted-foreground mb-2">
+                  You are responsible for safeguarding your password and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">4. User Conduct</h2>
+                <p className="text-muted-foreground mb-2">
+                  You agree not to:
+                </p>
+                <ul className="list-disc pl-6 text-muted-foreground mb-2 space-y-1">
+                  <li>Use our services for any illegal purpose or in violation of any local, state, national, or international law</li>
+                  <li>Violate or infringe other people's intellectual property, privacy, publicity, or other legal rights</li>
+                  <li>Use our services to transmit any material that is defamatory, offensive, or otherwise objectionable</li>
+                  <li>Interfere with or disrupt the integrity or performance of our services</li>
+                  <li>Attempt to gain unauthorized access to our services, other accounts, or computer systems</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">5. Listing and Bidding</h2>
+                <p className="text-muted-foreground mb-2">
+                  Sellers are responsible for the accuracy and completeness of their listings. All products must comply with applicable laws and regulations.
+                </p>
+                <p className="text-muted-foreground mb-2">
+                  Buyers are bound by their bids. Once a bid is placed, it constitutes a legally binding offer to purchase the item at the bid price.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">6. Fees and Payments</h2>
+                <p className="text-muted-foreground mb-2">
+                  We charge a commission on successful transactions. Payment processing is handled securely through our platform. Funds are released to sellers after successful delivery confirmation.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">7. Disclaimer of Warranties</h2>
+                <p className="text-muted-foreground mb-2">
+                  Our services are provided "as is" and "as available" without any warranties of any kind, either express or implied.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">8. Limitation of Liability</h2>
+                <p className="text-muted-foreground mb-2">
+                  In no event shall AgriBid be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of our services.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">9. Changes to Terms</h2>
+                <p className="text-muted-foreground mb-2">
+                  We reserve the right to modify these Terms at any time. If we make changes, we will provide notice by posting the updated Terms on our website. Your continued use of our services after such notice constitutes your acceptance of the new Terms.
+                </p>
+              </section>
+              
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-green-700">10. Contact Us</h2>
+                <p className="text-muted-foreground mb-2">
+                  If you have any questions about these Terms, please contact us at legal@agribid.com.
+                </p>
+              </section>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

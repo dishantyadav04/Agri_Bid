@@ -1,106 +1,153 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Package, Gavel, Truck, CreditCard, Clock } from 'lucide-react';
+import { ArrowDown, UserCheck, ShoppingCart, Award, Truck, DollarSign } from 'lucide-react';
 
 const HowItWorks: React.FC = () => {
-  const steps = [
-    {
-      title: "Farmers List Products",
-      description: "Farmers create listings for their agricultural products, specifying details like quantity, quality, and starting price.",
-      icon: Package
-    },
-    {
-      title: "Buyers Place Bids",
-      description: "Buyers browse listings and place competitive bids on products they're interested in purchasing.",
-      icon: Gavel
-    },
-    {
-      title: "Auction Ends",
-      description: "When the auction time frame ends, the highest bidder wins the right to purchase the products.",
-      icon: Clock
-    },
-    {
-      title: "Secure Payment",
-      description: "The winning buyer completes payment through our secure payment system.",
-      icon: CreditCard
-    },
-    {
-      title: "Product Delivery",
-      description: "After payment confirmation, arrangements are made for product delivery or pickup.",
-      icon: Truck
-    }
-  ];
-
   return (
     <div className="container mx-auto py-12 px-4">
-      <h1 className="text-4xl font-bold text-green-700 mb-8 text-center">How AgriBid Works</h1>
+      <h1 className="text-4xl font-bold text-green-700 mb-4 text-center">How AgriBid Works</h1>
+      <p className="text-muted-foreground max-w-3xl mx-auto text-center mb-16">
+        Our platform connects farmers directly with buyers through a transparent 
+        and fair auction system. Here's how the process works for both farmers and buyers.
+      </p>
       
-      <div className="max-w-3xl mx-auto mb-16">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-muted-foreground mb-8 text-center text-lg">
-              AgriBid connects farmers directly with buyers through a simple, transparent auction process that ensures fair prices and eliminates middlemen.
-            </p>
-            
-            <div className="space-y-12">
-              {steps.map((step, index) => (
-                <div key={index} className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                  <div className="bg-green-100 rounded-full p-4 flex-shrink-0">
-                    <step.icon size={24} className="text-green-700" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-20">
+        <div>
+          <h2 className="text-2xl font-semibold mb-6 text-green-700 flex items-center">
+            <UserCheck className="mr-2" /> For Farmers
+          </h2>
+          
+          <div className="space-y-8">
+            {[
+              {
+                title: "Register as a Farmer",
+                description: "Create your account and verify your farm details to get started on our platform.",
+                icon: UserCheck
+              },
+              {
+                title: "List Your Products",
+                description: "Upload details of your produce including photos, quantity, quality, certifications, and set a starting price.",
+                icon: ShoppingCart
+              },
+              {
+                title: "Set Auction Parameters",
+                description: "Choose your auction duration and any specific requirements for buyers.",
+                icon: Award
+              },
+              {
+                title: "Monitor Bids",
+                description: "Track all incoming bids in real-time and communicate with interested buyers.",
+                icon: DollarSign
+              },
+              {
+                title: "Complete the Sale",
+                description: "Once the auction ends, coordinate delivery with the winning bidder and receive payment securely through our platform.",
+                icon: Truck
+              }
+            ].map((step, index) => (
+              <div key={index} className="relative">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-700">
+                      <step.icon size={20} />
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 flex items-center">
-                      <span className="bg-green-100 text-green-700 w-7 h-7 rounded-full inline-flex items-center justify-center text-sm font-bold mr-3">
-                        {index + 1}
-                      </span>
-                      {step.title}
-                    </h3>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold mb-1">{step.title}</h3>
                     <p className="text-muted-foreground">{step.description}</p>
                   </div>
                 </div>
-              ))}
+                {index < 4 && (
+                  <div className="absolute left-6 top-12 h-12 w-0.5 bg-green-100" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div>
+          <h2 className="text-2xl font-semibold mb-6 text-green-700 flex items-center">
+            <ShoppingCart className="mr-2" /> For Buyers
+          </h2>
+          
+          <div className="space-y-8">
+            {[
+              {
+                title: "Register as a Buyer",
+                description: "Create your account with your business details to start participating in auctions.",
+                icon: UserCheck
+              },
+              {
+                title: "Browse Available Products",
+                description: "Explore our marketplace to find high-quality agricultural products from verified farmers.",
+                icon: ShoppingCart
+              },
+              {
+                title: "Place Bids",
+                description: "Participate in auctions by placing competitive bids on products you're interested in.",
+                icon: Award
+              },
+              {
+                title: "Win Auctions",
+                description: "If your bid wins, you'll be notified and can proceed with the purchase.",
+                icon: DollarSign
+              },
+              {
+                title: "Receive Your Products",
+                description: "Coordinate with the farmer for delivery or pickup and provide feedback after receiving your products.",
+                icon: Truck
+              }
+            ].map((step, index) => (
+              <div key={index} className="relative">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-700">
+                      <step.icon size={20} />
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold mb-1">{step.title}</h3>
+                    <p className="text-muted-foreground">{step.description}</p>
+                  </div>
+                </div>
+                {index < 4 && (
+                  <div className="absolute left-6 top-12 h-12 w-0.5 bg-green-100" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <div className="max-w-3xl mx-auto">
+        <Card>
+          <CardContent className="pt-6">
+            <h2 className="text-2xl font-semibold mb-4 text-green-700 text-center">Benefits of AgriBid</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold text-lg mb-2">For Farmers</h3>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li>• Direct access to a wide range of buyers</li>
+                  <li>• Higher profits by eliminating middlemen</li>
+                  <li>• Transparent price discovery through auctions</li>
+                  <li>• Secure payment processing</li>
+                  <li>• Build a reputation and loyal customer base</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">For Buyers</h3>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li>• Access to fresh, high-quality produce</li>
+                  <li>• Direct relationship with farmers</li>
+                  <li>• Transparent information about product origin</li>
+                  <li>• Competitive pricing through bidding</li>
+                  <li>• Support sustainable and fair agricultural practices</li>
+                </ul>
+              </div>
             </div>
           </CardContent>
         </Card>
-      </div>
-      
-      <div className="max-w-5xl mx-auto mt-16">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-green-700">Frequently Asked Questions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            {
-              question: "How do I register as a farmer?",
-              answer: "Simply click on the 'Register' button, select 'Farmer' as your account type, and complete the registration form with your details."
-            },
-            {
-              question: "How long do auctions typically last?",
-              answer: "Auction durations are set by farmers when they list their products. Typically, auctions run from 3-7 days to allow sufficient time for buyer participation."
-            },
-            {
-              question: "Is there a minimum bid amount?",
-              answer: "Yes, bids must be at least equal to the starting price set by the farmer. Subsequent bids must exceed the current highest bid."
-            },
-            {
-              question: "How is product quality assured?",
-              answer: "Farmers provide detailed descriptions and certifications (where applicable). We also have a rating system that helps buyers make informed decisions."
-            },
-            {
-              question: "What payment methods are accepted?",
-              answer: "We currently support major credit/debit cards and bank transfers. All payments are processed securely through our platform."
-            },
-            {
-              question: "How is delivery handled?",
-              answer: "After successful payment, buyers and farmers can arrange delivery directly. We provide communication tools to facilitate this process."
-            }
-          ].map((faq, index) => (
-            <Card key={index}>
-              <CardContent className="pt-6">
-                <h3 className="font-semibold text-lg mb-2 text-green-700">{faq.question}</h3>
-                <p className="text-sm text-muted-foreground">{faq.answer}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </div>
     </div>
   );

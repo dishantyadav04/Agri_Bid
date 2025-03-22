@@ -1,183 +1,157 @@
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { MapPin, Phone, Mail, Send, Clock } from 'lucide-react';
 
 const Contact: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      toast.success('Your message has been sent. We will get back to you soon!');
-      setName('');
-      setEmail('');
-      setSubject('');
-      setMessage('');
-      setIsLoading(false);
-    }, 1000);
+    toast({
+      title: "Message Sent",
+      description: "Thank you for contacting us. We'll get back to you soon!",
+      variant: "default",
+    });
+    // Clear form
+    (e.target as HTMLFormElement).reset();
   };
   
   return (
     <div className="container mx-auto py-12 px-4">
-      <h1 className="text-4xl font-bold text-green-700 mb-2 text-center">Contact Us</h1>
-      <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-        Have questions or feedback? We'd love to hear from you! Fill out the form below or use our contact information to get in touch.
+      <h1 className="text-4xl font-bold text-green-700 mb-6 text-center">Contact Us</h1>
+      <p className="text-muted-foreground max-w-2xl mx-auto text-center mb-16">
+        Have questions or feedback? We're here to help. Reach out to our team using the contact form below or through any of our contact channels.
       </p>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-green-700">Send us a message</CardTitle>
-              <CardDescription>
-                Fill out the form below and our team will get back to you as soon as possible.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Your Name</Label>
-                    <Input
-                      id="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="John Doe"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="john@example.com"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input
-                    id="subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    placeholder="How can we help you?"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Your message here..."
-                    rows={5}
-                    required
-                  />
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full bg-green-600 hover:bg-green-700"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Sending...' : 'Send Message'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="pt-6 text-center">
+            <div className="bg-green-100 w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <MapPin className="text-green-700" />
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Our Location</h3>
+            <p className="text-muted-foreground mb-2">123 Agri Lane</p>
+            <p className="text-muted-foreground">Farmville, India 400001</p>
+          </CardContent>
+        </Card>
         
-        <div>
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="pt-6 text-center">
+            <div className="bg-green-100 w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <Clock className="text-green-700" />
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Business Hours</h3>
+            <p className="text-muted-foreground mb-2">Monday - Friday: 9AM - 6PM</p>
+            <p className="text-muted-foreground">Saturday: 10AM - 4PM</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="pt-6 text-center">
+            <div className="bg-green-100 w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <Phone className="text-green-700" />
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Contact</h3>
+            <p className="text-muted-foreground mb-2">Phone: +91 1234567890</p>
+            <p className="text-muted-foreground">Email: info@agribid.com</p>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <Card>
+          <CardContent className="pt-6">
+            <h2 className="text-2xl font-semibold mb-6 text-green-700">Send Us a Message</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium mb-1">
+                  Full Name
+                </label>
+                <Input id="name" placeholder="Your full name" required />
+              </div>
+              
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium mb-1">
+                  Email Address
+                </label>
+                <Input id="email" type="email" placeholder="your@email.com" required />
+              </div>
+              
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium mb-1">
+                  Subject
+                </label>
+                <Input id="subject" placeholder="What is this regarding?" required />
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium mb-1">
+                  Message
+                </label>
+                <Textarea 
+                  id="message" 
+                  placeholder="Your message here..." 
+                  className="h-32" 
+                  required 
+                />
+              </div>
+              
+              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+                <Send className="mr-2 h-4 w-4" /> Send Message
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+        
+        <div className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl font-bold text-green-700">Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-start space-x-3">
-                <Mail className="text-green-600 mt-0.5" size={20} />
+            <CardContent className="pt-6">
+              <h2 className="text-2xl font-semibold mb-4 text-green-700">Frequently Asked Questions</h2>
+              <div className="space-y-4">
                 <div>
-                  <p className="font-medium">Email</p>
-                  <a href="mailto:info@agribid.com" className="text-green-600 hover:underline">
-                    info@agribid.com
-                  </a>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Phone className="text-green-600 mt-0.5" size={20} />
-                <div>
-                  <p className="font-medium">Phone</p>
-                  <a href="tel:+911234567890" className="text-green-600 hover:underline">
-                    +91 1234567890
-                  </a>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <MapPin className="text-green-600 mt-0.5" size={20} />
-                <div>
-                  <p className="font-medium">Address</p>
-                  <p className="text-muted-foreground">
-                    123 Agri Lane, Farmville<br />
-                    New Delhi, India 110001
+                  <h3 className="font-semibold mb-1">How do I register as a farmer?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    You can register by clicking on the "Register" button and selecting "Farmer" as your account type.
                   </p>
                 </div>
-              </div>
-              
-              <div className="pt-4 border-t border-border">
-                <p className="font-medium mb-3">Office Hours</p>
-                <div className="text-sm text-muted-foreground">
-                  <p className="flex justify-between">
-                    <span>Monday - Friday:</span>
-                    <span>9:00 AM - 6:00 PM</span>
+                <div>
+                  <h3 className="font-semibold mb-1">How does the bidding process work?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Buyers can place bids on products listed by farmers. The highest bid at the end of the auction period wins.
                   </p>
-                  <p className="flex justify-between">
-                    <span>Saturday:</span>
-                    <span>10:00 AM - 4:00 PM</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Is there a fee for using AgriBid?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    There is a small commission fee on successful transactions. Registration and listing products is free.
                   </p>
-                  <p className="flex justify-between">
-                    <span>Sunday:</span>
-                    <span>Closed</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">How is payment processed?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We offer secure online payments through our platform, with funds released to farmers after successful delivery.
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle className="text-xl font-bold text-green-700">Follow Us</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
-                Stay updated with our latest news and announcements by following us on social media.
+          <Card>
+            <CardContent className="pt-6">
+              <h2 className="text-xl font-semibold mb-4 text-green-700">Join Our Newsletter</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Stay updated with the latest news, product listings, and agricultural insights.
               </p>
-              <div className="flex space-x-4">
-                {['Twitter', 'Facebook', 'Instagram', 'LinkedIn'].map((platform) => (
-                  <Button key={platform} variant="outline" className="text-green-700 border-green-600 hover:bg-green-100">
-                    {platform}
-                  </Button>
-                ))}
+              <div className="flex space-x-2">
+                <Input placeholder="your@email.com" />
+                <Button className="bg-green-600 hover:bg-green-700">
+                  Subscribe
+                </Button>
               </div>
             </CardContent>
           </Card>
