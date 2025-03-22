@@ -27,7 +27,7 @@ const Login: React.FC = () => {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState<'farmer' | 'buyer'>('buyer');
+  const [userType, setUserType] = useState<'farmer' | 'buyer' | 'admin'>('buyer');
   const [isLoading, setIsLoading] = useState(false);
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,7 +45,13 @@ const Login: React.FC = () => {
       
       if (success) {
         toast.success(`Welcome back! You are now logged in as a ${userType}`);
-        navigate('/');
+        
+        // Redirect admin to admin panel, others to home
+        if (userType === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       } else {
         toast.error('Invalid credentials or user type');
       }
@@ -67,10 +73,11 @@ const Login: React.FC = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Tabs defaultValue="buyer" onValueChange={(value) => setUserType(value as 'farmer' | 'buyer')}>
-              <TabsList className="grid w-full grid-cols-2 mb-4">
+            <Tabs defaultValue="buyer" onValueChange={(value) => setUserType(value as 'farmer' | 'buyer' | 'admin')}>
+              <TabsList className="grid w-full grid-cols-3 mb-4">
                 <TabsTrigger value="buyer">Buyer</TabsTrigger>
                 <TabsTrigger value="farmer">Farmer</TabsTrigger>
+                <TabsTrigger value="admin">Admin</TabsTrigger>
               </TabsList>
               
               <div className="space-y-4">
@@ -84,6 +91,11 @@ const Login: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                  {userType === 'admin' && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      For demo: use <span className="font-mono">admin@example.com</span>
+                    </p>
+                  )}
                 </div>
                 
                 <div className="space-y-2">
@@ -101,6 +113,11 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  {userType === 'admin' && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      For demo: use any password
+                    </p>
+                  )}
                 </div>
                 
                 <Button 

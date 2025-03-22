@@ -12,6 +12,17 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AddProduct from "./pages/AddProduct";
+import MyProducts from "./pages/MyProducts";
+import MyBids from "./pages/MyBids";
+import Profile from "./pages/Profile";
+import AdminPanel from "./pages/AdminPanel";
+import CategoryPage from "./pages/CategoryPage";
+import AboutUs from "./pages/AboutUs";
+import HowItWorks from "./pages/HowItWorks";
+import Contact from "./pages/Contact";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -34,6 +45,17 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/add-product" element={<AddProduct />} />
+                <Route path="/my-products" element={<MyProducts />} />
+                <Route path="/my-bids" element={<MyBids />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/admin" element={<AdminPanel />} />
+                <Route path="/category/:categoryName" element={<CategoryPage />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/refund-policy" element={<RefundPolicy />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

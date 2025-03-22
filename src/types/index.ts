@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -29,7 +30,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  userType: 'farmer' | 'buyer';
+  userType: 'farmer' | 'buyer' | 'admin';
   address?: string;
   phone?: string;
 }

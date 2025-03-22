@@ -96,7 +96,7 @@ const sampleProducts: Product[] = [
   }
 ];
 
-// Sample users
+// Sample users with admin user added
 const sampleUsers: User[] = [
   {
     id: "user1",
@@ -113,6 +113,14 @@ const sampleUsers: User[] = [
     userType: "farmer",
     address: "456 Farm Rd, Mumbai, India",
     phone: "555-987-6543"
+  },
+  {
+    id: "admin",
+    name: "Admin User",
+    email: "admin@example.com",
+    userType: "admin",
+    address: "789 Admin Blvd, Bangalore, India",
+    phone: "555-321-7890"
   }
 ];
 
@@ -127,10 +135,12 @@ interface ProductContextType {
   getHighestBidForProduct: (productId: string) => number;
   getUserBids: (userId: string) => Bid[];
   isHighestBidder: (productId: string, userId: string) => boolean;
-  login: (email: string, password: string, userType: 'farmer' | 'buyer') => Promise<boolean>;
+  login: (email: string, password: string, userType: 'farmer' | 'buyer' | 'admin') => Promise<boolean>;
   register: (name: string, email: string, password: string, userType: 'farmer' | 'buyer') => Promise<boolean>;
   logout: () => void;
   addProduct: (product: Omit<Product, 'id'>) => void;
+  isAdmin: () => boolean;
+  updateUserProfile: (user: User) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -218,9 +228,20 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return false;
   };
 
-  const login = async (email: string, password: string, userType: 'farmer' | 'buyer'): Promise<boolean> => {
+  const login = async (email: string, password: string, userType: 'farmer' | 'buyer' | 'admin'): Promise<boolean> => {
     return new Promise((resolve) => {
       setTimeout(() => {
+        if (email === 'admin@example.com' && userType === 'admin') {
+          const adminUser = users.find(u => u.id === 'admin');
+          if (adminUser) {
+            setCurrentUser(adminUser);
+            setIsAuthenticated(true);
+            localStorage.setItem('currentUser', JSON.stringify(adminUser));
+            resolve(true);
+            return;
+          }
+        }
+        
         const user = users.find(u => u.email === email && u.userType === userType);
         if (user) {
           setCurrentUser(user);
@@ -274,6 +295,19 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setProducts(prevProducts => [...prevProducts, newProduct]);
   };
 
+  const isAdmin = (): boolean => {
+    return currentUser?.userType === 'admin';
+  };
+  
+  const updateUserProfile = (user: User): void => {
+    setCurrentUser(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    
+    const updatedUsers = users.map(u => 
+      u.id === user.id ? user : u
+    );
+  };
+
   return (
     <ProductContext.Provider
       value={{
@@ -290,7 +324,9 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         login,
         register,
         logout,
-        addProduct
+        addProduct,
+        isAdmin,
+        updateUserProfile
       }}
     >
       {children}

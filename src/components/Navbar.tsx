@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useProducts } from '@/context/ProductContext';
 import { Button } from '@/components/ui/button';
-import { User, LogOut, Menu, X } from 'lucide-react';
+import { User, LogOut, Menu, X, LayoutDashboard } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, currentUser, logout } = useProducts();
+  const { isAuthenticated, currentUser, logout, isAdmin } = useProducts();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -52,6 +52,11 @@ const Navbar: React.FC = () => {
               My Bids
             </Link>
           )}
+          {isAuthenticated && isAdmin() && (
+            <Link to="/admin" className="text-green-700 hover:text-green-800 hover:underline">
+              Admin Panel
+            </Link>
+          )}
           
           {isAuthenticated ? (
             <DropdownMenu>
@@ -75,6 +80,17 @@ const Navbar: React.FC = () => {
                 {currentUser?.userType === 'farmer' && (
                   <DropdownMenuItem onClick={() => navigate("/my-products")}>
                     My Products
+                  </DropdownMenuItem>
+                )}
+                {currentUser?.userType === 'buyer' && (
+                  <DropdownMenuItem onClick={() => navigate("/my-bids")}>
+                    My Bids
+                  </DropdownMenuItem>
+                )}
+                {isAdmin() && (
+                  <DropdownMenuItem onClick={() => navigate("/admin")}>
+                    <LayoutDashboard size={16} className="mr-2" />
+                    Admin Panel
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
@@ -141,6 +157,15 @@ const Navbar: React.FC = () => {
                   onClick={toggleMenu}
                 >
                   My Bids
+                </Link>
+              )}
+              {isAuthenticated && isAdmin() && (
+                <Link 
+                  to="/admin" 
+                  className="text-green-700 py-2 border-b border-gray-100" 
+                  onClick={toggleMenu}
+                >
+                  Admin Panel
                 </Link>
               )}
               {isAuthenticated ? (
