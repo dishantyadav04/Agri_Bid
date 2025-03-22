@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProducts } from '@/context/ProductContext';
@@ -39,9 +38,7 @@ const ProductDetails: React.FC = () => {
   }
   
   // Get the actual highest bid amount
-  const highestBidAmount = selectedProduct.bids && selectedProduct.bids.length > 0 
-    ? getHighestBidForProduct(selectedProduct.id) 
-    : selectedProduct.currentPrice;
+  const highestBidAmount = getHighestBidForProduct(selectedProduct.id);
   
   // Check if auction has ended
   const isAuctionEnded = selectedProduct.auctionEndTime && new Date() > new Date(selectedProduct.auctionEndTime);
