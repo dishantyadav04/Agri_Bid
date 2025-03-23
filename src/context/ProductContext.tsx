@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, Bid, User, Currency } from '@/types';
+import { Product, Bid, User, Currency, BlockchainTransaction } from '@/types';
 import { addDays } from 'date-fns';
+import { blockchainService, generateWalletAddress } from '@/utils/blockchainService';
+import { toast } from 'sonner';
 
 // Sample data with Indian context and auction end times
 const sampleProducts: Product[] = [
@@ -96,7 +98,7 @@ const sampleProducts: Product[] = [
   }
 ];
 
-// Sample users with admin user added
+// Sample users with admin user added and wallet addresses
 const sampleUsers: User[] = [
   {
     id: "user1",
@@ -104,7 +106,8 @@ const sampleUsers: User[] = [
     email: "john@example.com",
     userType: "buyer",
     address: "123 Main St, Delhi, India",
-    phone: "555-123-4567"
+    phone: "555-123-4567",
+    walletAddress: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
   },
   {
     id: "user2",
@@ -112,7 +115,8 @@ const sampleUsers: User[] = [
     email: "jane@example.com",
     userType: "farmer",
     address: "456 Farm Rd, Mumbai, India",
-    phone: "555-987-6543"
+    phone: "555-987-6543",
+    walletAddress: "0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5"
   },
   {
     id: "admin",
@@ -120,7 +124,8 @@ const sampleUsers: User[] = [
     email: "admin@example.com",
     userType: "admin",
     address: "789 Admin Blvd, Bangalore, India",
-    phone: "555-321-7890"
+    phone: "555-321-7890",
+    walletAddress: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
   }
 ];
 
@@ -141,6 +146,9 @@ interface ProductContextType {
   addProduct: (product: Omit<Product, 'id'>) => void;
   isAdmin: () => boolean;
   updateUserProfile: (user: User) => void;
+  getWalletBalance: (userId: string) => number;
+  getBlockchainTransactionDetails: (hash: string) => BlockchainTransaction | undefined;
+  getBlockchainStats: () => any;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -169,13 +177,36 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return;
     }
 
+    // Create blockchain transaction for the bid
+    let transactionHash: string | undefined;
+    try {
+      if (currentUser.walletAddress && product) {
+        const sellerUser = users.find(u => u.name === product.seller);
+        const sellerWallet = sellerUser?.walletAddress || "0x0000000000000000000000000000000000000000";
+        
+        transactionHash = blockchainService.createBidTransaction(
+          currentUser.walletAddress,
+          sellerWallet,
+          amount,
+          productId
+        );
+        
+        toast.success(`Bid recorded on blockchain with hash: ${transactionHash.substring(0, 10)}...`);
+      }
+    } catch (error) {
+      console.error("Blockchain transaction failed:", error);
+      toast.error("Blockchain verification failed. Please try again.");
+      return;
+    }
+
     const newBid: Bid = {
       id: `bid-${Date.now()}`,
       userId: currentUser.id,
       userName: currentUser.name,
       amount,
       timestamp: new Date(),
-      status: 'active'
+      status: 'active',
+      transactionHash: transactionHash
     };
 
     setProducts(prevProducts => 
@@ -237,6 +268,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
             setCurrentUser(adminUser);
             setIsAuthenticated(true);
             localStorage.setItem('currentUser', JSON.stringify(adminUser));
+            
+            // Show blockchain wallet notification
+            if (adminUser.walletAddress) {
+              toast.success(`Connected to blockchain wallet: ${adminUser.walletAddress.substring(0, 8)}...`);
+            }
+            
             resolve(true);
             return;
           }
@@ -247,6 +284,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setCurrentUser(user);
           setIsAuthenticated(true);
           localStorage.setItem('currentUser', JSON.stringify(user));
+          
+          // Show blockchain wallet notification
+          if (user.walletAddress) {
+            toast.success(`Connected to blockchain wallet: ${user.walletAddress.substring(0, 8)}...`);
+          }
+          
           resolve(true);
         } else {
           resolve(false);
@@ -262,17 +305,25 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (existingUser) {
           resolve(false);
         } else {
+          // Generate a new wallet address for the user
+          const walletAddress = generateWalletAddress();
+          
           const newUser: User = {
             id: `user-${Date.now()}`,
             name,
             email,
-            userType
+            userType,
+            walletAddress
           };
           
           users.push(newUser);
           setCurrentUser(newUser);
           setIsAuthenticated(true);
           localStorage.setItem('currentUser', JSON.stringify(newUser));
+          
+          // Show blockchain wallet notification
+          toast.success(`Created new blockchain wallet: ${walletAddress.substring(0, 8)}...`);
+          
           resolve(true);
         }
       }, 800);
@@ -286,10 +337,29 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const addProduct = (product: Omit<Product, 'id'>) => {
+    const productId = `product-${Date.now()}`;
+    
+    // Create blockchain transaction for the product listing
+    let blockchainId: string | undefined;
+    try {
+      if (currentUser?.walletAddress) {
+        blockchainId = blockchainService.createProductTransaction(
+          currentUser.walletAddress,
+          productId
+        );
+        
+        toast.success(`Product recorded on blockchain with hash: ${blockchainId.substring(0, 10)}...`);
+      }
+    } catch (error) {
+      console.error("Blockchain transaction failed:", error);
+      toast.error("Blockchain verification failed. Please try again.");
+    }
+    
     const newProduct: Product = {
       ...product,
-      id: `product-${Date.now()}`,
-      bids: []
+      id: productId,
+      bids: [],
+      blockchainId
     };
     
     setProducts(prevProducts => [...prevProducts, newProduct]);
@@ -306,6 +376,22 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const updatedUsers = users.map(u => 
       u.id === user.id ? user : u
     );
+  };
+  
+  // Blockchain specific functions
+  const getWalletBalance = (userId: string): number => {
+    const user = users.find(u => u.id === userId);
+    if (!user || !user.walletAddress) return 0;
+    
+    return blockchainService.getWalletBalance(user.walletAddress);
+  };
+  
+  const getBlockchainTransactionDetails = (hash: string): BlockchainTransaction | undefined => {
+    return blockchainService.getTransaction(hash);
+  };
+  
+  const getBlockchainStats = () => {
+    return blockchainService.getBlockchainStats();
   };
 
   return (
@@ -326,7 +412,10 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         logout,
         addProduct,
         isAdmin,
-        updateUserProfile
+        updateUserProfile,
+        getWalletBalance,
+        getBlockchainTransactionDetails,
+        getBlockchainStats
       }}
     >
       {children}

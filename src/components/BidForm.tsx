@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Product } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
-import { Clock } from 'lucide-react';
+import { Clock, Shield } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface BidFormProps {
   product: Product;
@@ -93,6 +94,13 @@ const BidForm: React.FC<BidFormProps> = ({ product, onBidSubmit }) => {
     <form onSubmit={handleSubmit} className="space-y-4 bg-green-50 p-6 rounded-lg backdrop-blur-sm animate-fade-in">
       {renderAuctionStatus()}
       
+      <div className="flex items-center gap-2 mb-2">
+        <Badge variant="outline" className="bg-primary/10 border-primary/30 text-primary flex items-center gap-1">
+          <Shield size={12} />
+          <span>Blockchain Protected</span>
+        </Badge>
+      </div>
+      
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <p className="text-muted-foreground">Current highest bid</p>
@@ -134,6 +142,16 @@ const BidForm: React.FC<BidFormProps> = ({ product, onBidSubmit }) => {
          isAuctionEnded ? 'Auction Ended' :
          (isSubmitting ? "Placing Bid..." : "Place Bid")}
       </Button>
+      
+      <div className="p-2 bg-black/5 rounded text-xs">
+        <p className="font-medium mb-1 flex items-center gap-1">
+          <Shield size={12} className="text-primary" />
+          Blockchain Secure Bidding
+        </p>
+        <p className="text-muted-foreground">
+          All bids are recorded on our blockchain ledger, providing transparency and preventing fraud.
+        </p>
+      </div>
       
       <p className="text-xs text-muted-foreground text-center">
         By placing a bid, you agree to our Terms and Conditions

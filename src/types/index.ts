@@ -15,6 +15,7 @@ export interface Product {
   certifications?: string[];
   bids?: Bid[];
   auctionEndTime?: Date; // Added auction end time
+  blockchainId?: string; // Reference to blockchain transaction
 }
 
 export interface Bid {
@@ -24,6 +25,7 @@ export interface Bid {
   amount: number;
   timestamp: Date;
   status: 'active' | 'won' | 'lost';
+  transactionHash?: string; // Blockchain transaction hash
 }
 
 export interface User {
@@ -33,6 +35,7 @@ export interface User {
   userType: 'farmer' | 'buyer' | 'admin';
   address?: string;
   phone?: string;
+  walletAddress?: string; // Blockchain wallet address
 }
 
 export interface PaymentDetails {
@@ -50,3 +53,25 @@ export interface AuthState {
 }
 
 export type Currency = '₹';
+
+export interface BlockchainTransaction {
+  hash: string;
+  timestamp: Date;
+  from: string;
+  to: string;
+  amount: number;
+  status: 'pending' | 'confirmed' | 'failed';
+  blockNumber?: number;
+  type: 'bid' | 'payment' | 'product' | 'other';
+  details?: string;
+}
+
+export interface Block {
+  blockNumber: number;
+  hash: string;
+  previousHash: string;
+  timestamp: Date;
+  transactions: BlockchainTransaction[];
+  nonce: number;
+}
+
