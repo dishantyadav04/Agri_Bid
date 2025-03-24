@@ -100,7 +100,7 @@ const FeaturedCategories: React.FC = () => {
         
         <div className="text-center mt-10">
           <Button 
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/all-products')}
             className="bg-green-600 hover:bg-green-700"
           >
             View All Products

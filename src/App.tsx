@@ -17,6 +17,7 @@ import MyBids from "./pages/MyBids";
 import Profile from "./pages/Profile";
 import AdminPanel from "./pages/AdminPanel";
 import CategoryPage from "./pages/CategoryPage";
+import AllProducts from "./pages/AllProducts";
 import AboutUs from "./pages/AboutUs";
 import HowItWorks from "./pages/HowItWorks";
 import Contact from "./pages/Contact";
@@ -50,6 +51,7 @@ const App = () => (
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/admin" element={<AdminPanel />} />
                 <Route path="/category/:categoryName" element={<CategoryPage />} />
+                <Route path="/all-products" element={<AllProducts />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/contact" element={<Contact />} />
