@@ -1,12 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProducts } from '@/context/ProductContext';
 import { toast } from "sonner";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Product } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
-import { Clock, Shield } from 'lucide-react';
+import { Clock, Shield, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface BidFormProps {
@@ -17,10 +17,34 @@ interface BidFormProps {
 const BidForm: React.FC<BidFormProps> = ({ product, onBidSubmit }) => {
   const { addBid, getHighestBidForProduct, currentUser, isAuthenticated, currency } = useProducts();
   const highestBid = getHighestBidForProduct(product.id);
-  const minimumBid = Math.max(product.startingPrice, highestBid + 1);
   
+  // Calculate minimum bid based on product settings
+  const calculateMinimumBid = () => {
+    // Start with the highest of current highest bid or starting price
+    let minBid = Math.max(product.startingPrice, highestBid);
+    
+    // Apply minimum bid increment if it exists and there are previous bids
+    if (product.minBidIncrement && highestBid > product.startingPrice) {
+      minBid = minBid * (1 + product.minBidIncrement / 100);
+    }
+    
+    // Ensure minimum bid amount is respected
+    if (product.minBidAmount) {
+      minBid = Math.max(minBid, product.minBidAmount);
+    }
+    
+    // Round to 2 decimal places
+    return Math.ceil(minBid);
+  };
+  
+  const minimumBid = calculateMinimumBid();
   const [bidAmount, setBidAmount] = useState<number>(minimumBid);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Update bid amount when minimum bid changes
+  useEffect(() => {
+    setBidAmount(minimumBid);
+  }, [minimumBid]);
 
   // Check if auction has ended
   const isAuctionEnded = product.auctionEndTime && new Date() > new Date(product.auctionEndTime);
@@ -48,6 +72,12 @@ const BidForm: React.FC<BidFormProps> = ({ product, onBidSubmit }) => {
       return;
     }
     
+    // Check max bid limit
+    if (product.maxBidAmount && bidAmount > product.maxBidAmount) {
+      toast.error(`Bid cannot exceed ${currency}${product.maxBidAmount}`);
+      return;
+    }
+    
     setIsSubmitting(true);
     
     // Simulate API call with timeout
@@ -56,7 +86,8 @@ const BidForm: React.FC<BidFormProps> = ({ product, onBidSubmit }) => {
       toast.success("Your bid has been placed successfully!");
       
       // Reset form
-      setBidAmount(bidAmount + 1);
+      const newMinBid = calculateMinimumBid();
+      setBidAmount(newMinBid);
       setIsSubmitting(false);
       
       if (onBidSubmit) {
@@ -111,6 +142,20 @@ const BidForm: React.FC<BidFormProps> = ({ product, onBidSubmit }) => {
           <p className="text-muted-foreground">Your minimum bid</p>
           <p className="font-medium">{currency}{minimumBid.toFixed(2)}</p>
         </div>
+        
+        {product.minBidIncrement && (
+          <div className="flex justify-between text-sm">
+            <p className="text-muted-foreground">Minimum increment</p>
+            <p className="font-medium">{product.minBidIncrement}%</p>
+          </div>
+        )}
+        
+        {product.maxBidAmount && (
+          <div className="flex justify-between text-sm">
+            <p className="text-muted-foreground">Maximum bid allowed</p>
+            <p className="font-medium">{currency}{product.maxBidAmount.toFixed(2)}</p>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col space-y-2">
@@ -123,6 +168,7 @@ const BidForm: React.FC<BidFormProps> = ({ product, onBidSubmit }) => {
             id="bidAmount"
             type="number"
             min={minimumBid}
+            max={product.maxBidAmount}
             step="1"
             value={bidAmount}
             onChange={(e) => setBidAmount(Number(e.target.value))}

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProducts } from '@/context/ProductContext';
@@ -146,13 +147,13 @@ const ProductDetails: React.FC = () => {
                   Proceed to Checkout
                 </Button>
               ) : (
-                isAuthenticated && hasBids && (
+                isAuthenticated && isAuctionEnded && hasBids && (
                   <Button 
                     variant="outline" 
                     disabled
                     className="flex gap-2 items-center"
                   >
-                    <Star className="h-4 w-4 text-yellow-500" /> You've been outbid
+                    <Star className="h-4 w-4 text-yellow-500" /> You didn't win this auction
                   </Button>
                 )
               )}

@@ -21,7 +21,10 @@ const sampleProducts: Product[] = [
     expiryDate: "2024-10-01",
     certifications: ["Organic", "Non-GMO"],
     bids: [],
-    auctionEndTime: addDays(new Date(), 7)
+    auctionEndTime: addDays(new Date(), 7),
+    minBidIncrement: 5, // 5% minimum increase
+    minBidAmount: 120,
+    maxBidAmount: 500
   },
   {
     id: "2",
@@ -173,8 +176,36 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!currentUser) return;
 
     const product = products.find(p => p.id === productId);
-    if (product?.auctionEndTime && new Date() > new Date(product.auctionEndTime)) {
+    if (!product) return;
+    
+    // Check if auction has ended
+    if (product.auctionEndTime && new Date() > new Date(product.auctionEndTime)) {
+      toast.error("This auction has ended");
       return;
+    }
+
+    // Check minimum bid amount
+    if (product.minBidAmount && amount < product.minBidAmount) {
+      toast.error(`Bid must be at least ${currency}${product.minBidAmount}`);
+      return;
+    }
+
+    // Check maximum bid amount
+    if (product.maxBidAmount && amount > product.maxBidAmount) {
+      toast.error(`Bid cannot exceed ${currency}${product.maxBidAmount}`);
+      return;
+    }
+
+    // Get current highest bid
+    const highestBid = getHighestBidForProduct(productId);
+    
+    // Check minimum increment if there are existing bids
+    if (highestBid > product.startingPrice && product.minBidIncrement) {
+      const minRequiredBid = highestBid * (1 + product.minBidIncrement / 100);
+      if (amount < minRequiredBid) {
+        toast.error(`New bid must be at least ${product.minBidIncrement}% higher than current bid (${currency}${minRequiredBid.toFixed(2)})`);
+        return;
+      }
     }
 
     // Create blockchain transaction for the bid
@@ -245,15 +276,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const isAuctionEnded = product.auctionEndTime && new Date() > new Date(product.auctionEndTime);
     
     if (isAuctionEnded) {
-      const highestBid = Math.max(...product.bids.map(bid => bid.amount));
-      const userHighestBid = Math.max(
-        ...product.bids
-          .filter(bid => bid.userId === userId)
-          .map(bid => bid.amount),
-        0
-      );
+      // Find the highest bid amount
+      const highestBidAmount = Math.max(...product.bids.map(bid => bid.amount));
       
-      return highestBid === userHighestBid;
+      // Find all bids with the highest amount
+      const highestBids = product.bids.filter(bid => bid.amount === highestBidAmount);
+      
+      // Check if any of the user's bids are among the highest bids
+      return highestBids.some(bid => bid.userId === userId);
     }
     
     return false;
@@ -359,7 +389,10 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       ...product,
       id: productId,
       bids: [],
-      blockchainId
+      blockchainId,
+      minBidIncrement: product.minBidIncrement || 5, // Default 5% if not specified
+      minBidAmount: product.minBidAmount || product.startingPrice,
+      maxBidAmount: product.maxBidAmount
     };
     
     setProducts(prevProducts => [...prevProducts, newProduct]);

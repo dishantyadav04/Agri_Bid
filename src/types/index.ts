@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   name: string;
@@ -16,6 +15,9 @@ export interface Product {
   bids?: Bid[];
   auctionEndTime?: Date; // Added auction end time
   blockchainId?: string; // Reference to blockchain transaction
+  minBidIncrement?: number; // Minimum percentage increase for new bids
+  minBidAmount?: number; // Minimum allowed bid amount
+  maxBidAmount?: number; // Maximum allowed bid amount
 }
 
 export interface Bid {
@@ -74,4 +76,3 @@ export interface Block {
   transactions: BlockchainTransaction[];
   nonce: number;
 }
-
