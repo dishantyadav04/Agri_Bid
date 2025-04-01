@@ -16,7 +16,7 @@ import {
   CardFooter 
 } from '@/components/ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, BadgePercent, ArrowUp, ArrowDown } from 'lucide-react';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format, addHours, addDays, setHours, setMinutes, isSameDay } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -37,6 +37,11 @@ const AddProduct: React.FC = () => {
   const [auctionEndMinute, setAuctionEndMinute] = useState<string>("00");
   const [auctionEndAmPm, setAuctionEndAmPm] = useState<string>("PM");
   const [isLoading, setIsLoading] = useState(false);
+  
+  // New state variables for bid settings
+  const [minBidIncrement, setMinBidIncrement] = useState<number>(5);
+  const [minBidAmount, setMinBidAmount] = useState<number | undefined>(undefined);
+  const [maxBidAmount, setMaxBidAmount] = useState<number | undefined>(undefined);
   
   // Generate hours for select
   const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
@@ -85,6 +90,22 @@ const AddProduct: React.FC = () => {
       return;
     }
     
+    // Validate bid settings
+    if (minBidAmount !== undefined && minBidAmount < startingPrice) {
+      toast.error('Minimum bid amount cannot be less than starting price');
+      return;
+    }
+    
+    if (maxBidAmount !== undefined && maxBidAmount <= startingPrice) {
+      toast.error('Maximum bid amount must be greater than starting price');
+      return;
+    }
+    
+    if (minBidAmount !== undefined && maxBidAmount !== undefined && minBidAmount >= maxBidAmount) {
+      toast.error('Minimum bid amount must be less than maximum bid amount');
+      return;
+    }
+    
     setIsLoading(true);
     
     try {
@@ -99,6 +120,9 @@ const AddProduct: React.FC = () => {
         location,
         seller: currentUser?.name || 'Unknown Seller',
         auctionEndTime: finalEndTime,
+        minBidIncrement, // Add bid increment
+        minBidAmount, // Add minimum bid amount
+        maxBidAmount, // Add maximum bid amount
       });
       
       toast.success('Product added successfully!');
@@ -208,6 +232,73 @@ const AddProduct: React.FC = () => {
                     placeholder="e.g., Mumbai, Delhi"
                     required
                   />
+                </div>
+              </div>
+              
+              {/* New Bid Settings Section */}
+              <div className="border rounded-lg p-4 bg-gray-50">
+                <h3 className="text-base font-medium mb-3 flex items-center gap-2">
+                  <BadgePercent size={18} className="text-green-600" />
+                  Bid Settings
+                </h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="minBidIncrement" className="flex items-center gap-2">
+                      <ArrowUp size={16} className="text-green-600" />
+                      Minimum Bid Increment (%)*
+                    </Label>
+                    <Input
+                      id="minBidIncrement"
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={minBidIncrement}
+                      onChange={(e) => setMinBidIncrement(Number(e.target.value))}
+                      required
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      New bids must be at least this percentage higher than the current highest bid
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="minBidAmount" className="flex items-center gap-2">
+                        <ArrowDown size={16} className="text-amber-600" />
+                        Minimum Bid Amount ({currency})
+                      </Label>
+                      <Input
+                        id="minBidAmount"
+                        type="number"
+                        min={startingPrice}
+                        value={minBidAmount === undefined ? '' : minBidAmount}
+                        onChange={(e) => setMinBidAmount(e.target.value ? Number(e.target.value) : undefined)}
+                        placeholder="Optional"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Minimum allowed bid (defaults to starting price)
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="maxBidAmount" className="flex items-center gap-2">
+                        <ArrowUp size={16} className="text-red-600" />
+                        Maximum Bid Amount ({currency})
+                      </Label>
+                      <Input
+                        id="maxBidAmount"
+                        type="number"
+                        min={startingPrice > 0 ? startingPrice * 1.1 : 1}
+                        value={maxBidAmount === undefined ? '' : maxBidAmount}
+                        onChange={(e) => setMaxBidAmount(e.target.value ? Number(e.target.value) : undefined)}
+                        placeholder="Optional"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Maximum allowed bid (leave empty for no limit)
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
